@@ -1,10 +1,20 @@
 const fs = require('fs').promises;
-// const path = require('path');
 const express = require('express');
 
 const HTTP_OK_STATUS = 200;
-// const talkers = path.join(__dirname, '..', 'talker.json');
 const router = express.Router();
+
+router.get('/', async (_request, response) => {
+  await fs.readFile('./talker.json', 'utf8')
+    .then((data) => {
+      console.log(`Conteúdo do arquivo: ${data}`);
+      return response.status(HTTP_OK_STATUS).json(JSON.parse(data));
+    })
+    .catch((err) => {
+      console.error(`Não foi possível ler o arquivo ${'talker.json'}\n Erro: ${err}`);
+      process.exit(1); // Encerra a execução do script e informa ao sistema operacional que houve um erro com código
+    });
+  });
 
 // function readFilePromise(fileTalker) {
 //     return new Promise((resolve, reject) => {
@@ -30,17 +40,5 @@ const router = express.Router();
 //     console.log(content.toString('utf-8'));
 //     return content.toString('utf8');
 //   });
-
-router.get('/talker', async (_request, response) => {
-  await fs.readFile('./talker.json', 'utf8')
-    .then((data) => {
-      console.log(`Conteúdo do arquivo: ${data}`);
-      return response.status(HTTP_OK_STATUS).json(JSON.parse(data));
-    })
-    .catch((err) => {
-      console.error(`Não foi possível ler o arquivo ${'talker.json'}\n Erro: ${err}`);
-      process.exit(1); // Encerra a execução do script e informa ao sistema operacional que houve um erro com código
-    });
-  });
 
 module.exports = router;
