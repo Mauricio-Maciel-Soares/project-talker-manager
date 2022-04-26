@@ -6,6 +6,7 @@ const router = require('./utils/router');
 
 app.use(bodyParser.json()); // para o req.body
 app.use('/talker', router);
+app.use('/login', router);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';

@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const { reading } = require('./middlewares');
 
 const HTTP_OK_STATUS = 200;
@@ -9,14 +10,19 @@ router.get('/', async (_request, response) => {
   response.status(HTTP_OK_STATUS).json(talkers);
 });
 
-  router.get('/:id', async (request, response) => {
-    const { id } = request.params;
-    const talkers = await reading();
-    const talkerId = talkers.find((e) => e.id === parseInt(id, 10));
-    if (!talkerId) {
-      return response.status(404).json({ message: 'Pessoa palestrante não encontrada' }); 
-    }
-    response.status(200).json(talkerId);
-  });
+router.get('/:id', async (request, response) => {
+  const { id } = request.params;
+  const talkers = await reading();
+  const talkerId = talkers.find((e) => e.id === parseInt(id, 10));
+  if (!talkerId) {
+    return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  response.status(HTTP_OK_STATUS).json(talkerId);
+});
+
+router.post('/', (_request, response) => {
+  response.status(HTTP_OK_STATUS)
+  .json({ token: crypto.randomBytes(8).toString('hex') });
+});
 
 module.exports = router;
