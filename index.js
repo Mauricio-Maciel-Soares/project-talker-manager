@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const router = require('./utils/router');
 
-app.use(bodyParser.json()); // para que isso se nao funciona?
+app.use(bodyParser.json()); // para o req.body
 app.use('/talker', router);
 
 const HTTP_OK_STATUS = 200;
