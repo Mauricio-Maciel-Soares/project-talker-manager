@@ -1,5 +1,3 @@
-const fs = require('fs').promises;
-
 const isValidEmail = (request, response, next) => {
   const { email } = request.body;
   if (!email) { return response.status(400).json({ message: 'O campo "email" é obrigatório' }); }
@@ -27,13 +25,18 @@ const isValidPassword = (request, response, next) => {
   next();
 };
 
-async function reading() {
-    const data = await fs.readFile('./talker.json');
-    return JSON.parse(data);
-}
+const isValidToken = (request, response, next) => {
+  const token = request.headers.authorization;
+  const tokenRegex = new RegExp(/^[a-zA-Z0-9]{16}$/);
+
+  if (!token) { return response.status(401).json({ message: 'Token não encontrado' }); }
+  if (!tokenRegex.test(token)) { return response.status(401).json({ message: 'Token inválido' }); }
+
+  next();
+};
 
   module.exports = {
-    reading,
     isValidEmail,
     isValidPassword,
+    isValidToken,
 };
