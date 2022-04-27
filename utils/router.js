@@ -1,6 +1,6 @@
 const express = require('express');
 const crypto = require('crypto');
-const { reading } = require('./middlewares');
+const { reading, isValidEmail, isValidPassword } = require('./middlewares');
 
 const HTTP_OK_STATUS = 200;
 const router = express.Router();
@@ -20,7 +20,7 @@ router.get('/:id', async (request, response) => {
   response.status(HTTP_OK_STATUS).json(talkerId);
 });
 
-router.post('/', (_request, response) => {
+router.post('/', isValidEmail, isValidPassword, (_request, response) => {
   response.status(HTTP_OK_STATUS)
   .json({ token: crypto.randomBytes(8).toString('hex') });
 });
