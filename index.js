@@ -9,6 +9,8 @@ const {
   isValidName,
   isValidAge,
   thereIsKeyTalk,
+  isValidKeys,
+  isValidDateRate,
    } = require('./utils/middlewares');
 
 const app = express();
@@ -28,7 +30,8 @@ app.post('/login', isValidEmail, isValidPassword, (_request, response) => {
 });
 
 // referência => https://www.youtube.com/watch?v=75F0ejsEcys
-app.post('/talker', isValidToken, isValidName, isValidAge, thereIsKeyTalk, async (request, response) => {
+app.post('/talker', isValidToken, isValidName, isValidAge, thereIsKeyTalk, isValidKeys,
+  isValidDateRate, async (request, response) => {
   const { name, age, talk: { watchedAt, rate } } = request.body; // conteúdo do body;
   const newTalker = {
     name,

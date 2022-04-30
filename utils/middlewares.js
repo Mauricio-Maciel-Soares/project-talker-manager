@@ -1,4 +1,7 @@
 const DATE_REGEX = /(0[1-9]|1[1-9]|2[1-9]|3[0-1])[/](0[1-9]|1[0-2])[/](20[0-3][0-9])/;
+const MESSAGE = {
+  message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+};
 
 const isValidEmail = (request, response, next) => {
   const { email } = request.body;
@@ -37,9 +40,8 @@ const isValidToken = (request, response, next) => {
   next();
 };
 
-const thereIsKeyTalk = (request, response, next) => {
+const isValidDateRate = (request, response, next) => {
   const { talk } = request.body;
-
   if (!DATE_REGEX.test(talk.watchedAt)) {
     return response.status(400)
       .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
@@ -47,6 +49,20 @@ const thereIsKeyTalk = (request, response, next) => {
   if (!Number.isInteger(talk.rate) || Number(talk.rate) < 1 || Number(talk.rate) > 5) {
     return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
+
+  next();
+};
+
+const thereIsKeyTalk = (request, response, next) => {
+  const { talk } = request.body;
+  if (!talk || talk === '') { return response.status(400).json(MESSAGE); }
+  next();
+};
+
+const isValidKeys = (request, response, next) => {
+  const { talk } = request.body;
+  if (!talk.watchedAt || talk.watchedAt === '') { return response.status(400).json(MESSAGE); }
+  if (talk.rate === undefined || talk.rate === '') { return response.status(400).json(MESSAGE); }
 
   next();
 };
@@ -80,4 +96,6 @@ const isValidAge = (request, response, next) => {
     isValidToken,
     isValidAge,
     thereIsKeyTalk,
+    isValidKeys,
+    isValidDateRate,
 };
