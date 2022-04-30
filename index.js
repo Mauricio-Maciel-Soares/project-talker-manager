@@ -5,11 +5,16 @@ const { token, reading, writing } = require('./utils/functions');
 const {
   isValidEmail,
   isValidPassword,
+  isValidToken,
+  isValidName,
+  isValidAge,
+  thereIsKeyTalk,
    } = require('./utils/middlewares');
 
 const app = express();
 const router = require('./utils/router');
 
+app.use(express.json());
 app.use(bodyParser.json()); // para o req.body
 app.use('/talker', router);
 app.use('/login', router);
@@ -22,21 +27,22 @@ app.post('/login', isValidEmail, isValidPassword, (_request, response) => {
   .json({ token });
 });
 
-app.post('/talker', async (request, response) => {
-  const { name, age, talk: watchedAt, rate } = request.body; // conteúdo do body;
+// referência => https://www.youtube.com/watch?v=75F0ejsEcys
+app.post('/talker', isValidToken, isValidName, isValidAge, thereIsKeyTalk, async (request, response) => {
+  const { name, age, talk: { watchedAt, rate } } = request.body; // conteúdo do body;
   const newTalker = {
     name,
     age,
-    talk: 
+    talk: {
       watchedAt,
       rate,
+    },
   };
   const talkers = await reading();
-
   newTalker.id = talkers.length + 1; // chave do id dinâmica;
   talkers.push(newTalker);
-
   await writing(talkers);
+  console.log(talkers);
   return response.status(201).json(newTalker);
 });
 

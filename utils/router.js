@@ -24,16 +24,16 @@ router.get('/:id', async (request, response) => {
   response.status(HTTP_OK_STATUS).json(talkerId);
 });
 
-// router.post('/', isValidEmail, isValidPassword, (_request, response) => {
-//   response.status(HTTP_OK_STATUS)
-//   .json({ token: crypto.randomBytes(8).toString('hex') });
-// });
-
 // router.post('/talker', async (request, response) => {
 //   const { name } = request.body;
 //   const talkers = await reading();
 //   talkers.push({ name });
 //   return response.status(201).json({ message: 'OK' });
+// });
+
+// router.post('/', isValidEmail, isValidPassword, (_request, response) => {
+//   response.status(HTTP_OK_STATUS)
+//   .json({ token: crypto.randomBytes(8).toString('hex') });
 // });
 
 module.exports = router;

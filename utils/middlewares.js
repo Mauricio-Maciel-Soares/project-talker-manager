@@ -1,3 +1,5 @@
+const DATE_REGEX = /(0[1-9]|1[1-9]|2[1-9]|3[0-1])[/](0[1-9]|1[0-2])[/](20[0-3][0-9])/;
+
 const isValidEmail = (request, response, next) => {
   const { email } = request.body;
   if (!email) { return response.status(400).json({ message: 'O campo "email" é obrigatório' }); }
@@ -35,8 +37,47 @@ const isValidToken = (request, response, next) => {
   next();
 };
 
+const thereIsKeyTalk = (request, response, next) => {
+  const { talk } = request.body;
+
+  if (!DATE_REGEX.test(talk.watchedAt)) {
+    return response.status(400)
+      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  if (!Number.isInteger(talk.rate) || Number(talk.rate) < 1 || Number(talk.rate) > 5) {
+    return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+
+  next();
+};
+
+const isValidName = (request, response, next) => {
+  const { name } = request.body;
+  if (!name || name === '') {
+    return response.status(400).json({ message: 'O campo "name" é obrigatório' }); 
+  }
+  if (name.length < 3) {
+    return response.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+  next();
+};
+
+const isValidAge = (request, response, next) => {
+  const { age } = request.body;
+  if (!age || age === '') {
+    return response.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }   
+  if (Number(age) < 18) {
+    return response.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+  next();
+};
+
   module.exports = {
+    isValidName,
     isValidEmail,
     isValidPassword,
     isValidToken,
+    isValidAge,
+    thereIsKeyTalk,
 };
