@@ -50,6 +50,17 @@ app.post('/talker', isValidToken, isValidName, isValidAge, thereIsKeyTalk, isVal
 
 // https:app.betrybe.com/course/back-end/introducao-ao-desenvolvimento-web-com-nodejs/express-http-com-nodejs/8022a9b1-7548-4298-97ce-9acfa8986e66/conteudos/6538b037-f4ae-4cb8-a237-1a1501d996f4/atualizando-e-deletando-objetos-atraves-da-api/1c0f51c5-d076-4635-b3d3-b57979d164ba?use_case=side_bar
 
+app.delete('/talker/:id', isValidToken, async (request, response) => {
+  const { id } = request.params;
+  const talkers = await reading();
+  const talkerId = talkers.findIndex((e) => e.id === parseInt(id, 10));
+  if (talkerId === -1) return response.status(404).json({ message: 'talker not found!' });
+
+  talkers.splice(talkerId, id);
+  await writing(talkers);
+  return response.status(204).end();
+});
+
 app.put('/talker/:id', isValidToken, isValidName, isValidAge, thereIsKeyTalk, isValidKeys,
   isValidDateRate, async (request, response) => {
   const { id } = request.params;
