@@ -12,7 +12,7 @@ const schemas = joi.object({
   const test = (request, response, next) => {
   const name = joi.string().min(3).required();
   name.validate(request.body.name);
-   if (!name) { return response.status(401).json({ message: 'fudeu' }); }
+   if (!name) { return response.status(401).json({ message: 'erro' }); }
 
   // const joierror = schemas.validate({ name: request.body.name }, response.status(401).json({ message: 'fudeu' }));
   // if (!joierror) { return response.status(201).json({ message: 'ok' }); }

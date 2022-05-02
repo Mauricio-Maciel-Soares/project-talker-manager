@@ -1,7 +1,7 @@
 const fs = require('fs').promises;
 const crypto = require('crypto');
 
-const token = crypto.randomBytes(8).toString('hex');
+const token = { token: crypto.randomBytes(8).toString('hex') };
 
 async function reading() {
     const data = await fs.readFile('./talker.json');
